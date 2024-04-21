@@ -1,4 +1,4 @@
-import { Pen, Plus, Trash } from 'lucide-react'
+import { Trash } from 'lucide-react'
 import { Helmet } from 'react-helmet-async'
 
 import { Button } from '@/components/ui/button'
@@ -12,7 +12,14 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
+import { CreateDeveloperDialog } from './create-developer-dialog'
+import { EditDeveloperDialog } from './edit-developer-dialog'
+
 export function Developers() {
+  async function handleDeleteDeveloper() {
+    console.log('Função deletar')
+  }
+
   return (
     <>
       <Helmet title="Desenvolvedores" />
@@ -22,10 +29,7 @@ export function Developers() {
       </h1>
 
       <div className="flex justify-end">
-        <Button variant="default" size="sm">
-          Novo Desenvolvedor
-          <Plus strokeWidth={3} className="ml-2 h-3 w-3" />
-        </Button>
+        <CreateDeveloperDialog />
       </div>
       <div className="flex-1 rounded-md border border-secondary-foreground bg-secondary">
         <Table>
@@ -52,12 +56,12 @@ export function Developers() {
               <TableCell className="font-mono text-xs">25 anos</TableCell>
               <TableCell className="font-mono text-xs">Música</TableCell>
               <TableCell className="flex items-center gap-2">
-                <Button variant="outline" size="sm">
-                  Editar
-                  <Pen strokeWidth={3} className="ml-2 h-3 w-3" />
-                </Button>
-
-                <Button variant="destructive" size="sm">
+                <EditDeveloperDialog />
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleDeleteDeveloper}
+                >
                   Excluir
                   <Trash strokeWidth={3} className="ml-2 h-3 w-3" />
                 </Button>

@@ -16,6 +16,10 @@ import { CreateLevelDialog } from './create-level-dialog'
 import { EditLevelDialog } from './edit-level-dialog'
 
 export function Levels() {
+  async function handleDeleteLevel() {
+    console.log('Função deletar')
+  }
+
   return (
     <>
       <Helmet title="Níveis" />
@@ -45,7 +49,11 @@ export function Levels() {
               <TableCell className="flex items-center gap-2">
                 <EditLevelDialog />
 
-                <Button variant="destructive" size="sm">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleDeleteLevel}
+                >
                   Excluir
                   <Trash strokeWidth={3} className="ml-2 h-3 w-3" />
                 </Button>

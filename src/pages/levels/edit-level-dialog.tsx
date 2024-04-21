@@ -71,9 +71,7 @@ export function EditLevelDialog() {
         <form id="FormEditLevel" onSubmit={handleSubmit(handleEditLevel)}>
           <div className="grid gap-2 py-4">
             <div className="flex items-center gap-4">
-              <Label htmlFor="level" className="text-right">
-                Nível
-              </Label>
+              <Label htmlFor="level">Nível</Label>
               <Input
                 id="level"
                 defaultValue="Nível Exemplo"

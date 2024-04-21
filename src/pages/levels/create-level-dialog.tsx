@@ -72,9 +72,7 @@ export function CreateLevelDialog() {
         <form id="FormCreateLevel" onSubmit={handleSubmit(handleCreateLevel)}>
           <div className="grid gap-2 py-4">
             <div className="flex items-center gap-4">
-              <Label htmlFor="level" className="text-right">
-                Nível
-              </Label>
+              <Label htmlFor="level">Nível</Label>
               <Input
                 id="level"
                 placeholder="Nível Exemplo"

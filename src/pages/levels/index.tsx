@@ -1,4 +1,4 @@
-import { Pen, Plus, Trash } from 'lucide-react'
+import { Trash } from 'lucide-react'
 import { Helmet } from 'react-helmet-async'
 
 import { Button } from '@/components/ui/button'
@@ -12,6 +12,9 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
+import { CreateLevelDialog } from './create-level-dialog'
+import { EditLevelDialog } from './edit-level-dialog'
+
 export function Levels() {
   return (
     <>
@@ -20,10 +23,7 @@ export function Levels() {
       <h1 className="text-2xl font-bold tracking-tight">Lista de Níveis</h1>
 
       <div className="flex justify-end">
-        <Button variant="default" size="sm">
-          Novo Nível
-          <Plus strokeWidth={3} className="ml-2 h-3 w-3" />
-        </Button>
+        <CreateLevelDialog />
       </div>
       <div className="flex-1 rounded-md border border-secondary-foreground bg-secondary">
         <Table>
@@ -43,10 +43,7 @@ export function Levels() {
 
               <TableCell>Nível 1</TableCell>
               <TableCell className="flex items-center gap-2">
-                <Button variant="outline" size="sm">
-                  Editar
-                  <Pen strokeWidth={3} className="ml-2 h-3 w-3" />
-                </Button>
+                <EditLevelDialog />
 
                 <Button variant="destructive" size="sm">
                   Excluir

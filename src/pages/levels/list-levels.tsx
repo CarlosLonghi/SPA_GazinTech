@@ -1,0 +1,93 @@
+import { useContextSelector } from '@fluentui/react-context-selector'
+import { Trash } from 'lucide-react'
+import { toast } from 'sonner'
+
+import { Button } from '@/components/ui/button'
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+
+import { LevelsContext } from '../../contexts/LevelContext'
+import { CreateLevelDialog } from './create-level-dialog'
+import { EditLevelDialog } from './edit-level-dialog'
+
+export function ListLevels() {
+  const levels = useContextSelector(LevelsContext, (context) => {
+    return context.levels
+  })
+
+  console.log(levels)
+
+  const deleteLevel = useContextSelector(LevelsContext, (context) => {
+    return context.deleteLevel
+  })
+
+  async function handleDeleteLevel(levelId: any) {
+    try {
+      await deleteLevel(levelId)
+      toast.success('Nível deletado com sucesso!')
+    } catch (error: any) {
+      if (error.response && error.response.status === 400) {
+        return toast.error('Nível Vinculado há um desenvolvedor!')
+      }
+      toast.error('Erro ao deletar o nível.')
+    }
+  }
+
+  return (
+    <>
+      <h1 className="text-2xl font-bold tracking-tight">Lista de Níveis</h1>
+
+      <div className="flex justify-end">
+        <CreateLevelDialog />
+      </div>
+      <div className="flex-1 rounded-md border border-secondary-foreground bg-secondary">
+        {levels ? (
+          <Table>
+            <TableCaption>Níveis</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-80 text-foreground">Código</TableHead>
+                <TableHead className="text-foreground">Nível</TableHead>
+                <TableHead className="w-28">Ações</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {levels.map((levelData) => (
+                <TableRow key={String(levelData.level)}>
+                  <TableCell className="font-mono text-xs font-medium">
+                    {levelData.id}
+                  </TableCell>
+
+                  <TableCell>{levelData.level}</TableCell>
+                  <TableCell className="flex items-center gap-2">
+                    <EditLevelDialog levelId={levelData.id} />
+
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDeleteLevel(levelData.id)}
+                    >
+                      Excluir
+                      <Trash strokeWidth={3} className="ml-2 h-3 w-3" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <h4 className="text-1xl font-medium tracking-tight">
+            Nenhum Nível Cadastrado.
+          </h4>
+        )}
+      </div>
+    </>
+  )
+}

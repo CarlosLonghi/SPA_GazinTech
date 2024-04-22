@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { api } from '@/libs/axios'
 
 const editLevelFormSchema = z.object({
   level: z.string(),
@@ -25,7 +26,7 @@ const editLevelFormSchema = z.object({
 
 type EditLevelFormInputs = z.infer<typeof editLevelFormSchema>
 
-export function EditLevelDialog() {
+export function EditLevelDialog({ levelId }: any) {
   const [dialogOpen, setDialogOpen] = useState(false)
 
   const {
@@ -45,9 +46,10 @@ export function EditLevelDialog() {
         setDialogOpen(false)
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 800))
+      await api.put(`/niveis/${levelId}`, {
+        level,
+      })
 
-      console.log(level)
       toast.success('Nível alterado com sucesso!')
       reset()
     } catch (error) {

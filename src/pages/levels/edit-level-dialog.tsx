@@ -24,9 +24,14 @@ const editLevelFormSchema = z.object({
   level: z.string(),
 })
 
-type EditLevelFormInputs = z.infer<typeof editLevelFormSchema>
+const editLevelId = z.object({
+  id: z.string(),
+})
 
-export function EditLevelDialog({ levelId }: any) {
+type EditLevelFormInputs = z.infer<typeof editLevelFormSchema>
+type EditLevelId = z.infer<typeof editLevelId>
+
+export function EditLevelDialog({ id }: EditLevelId) {
   const [dialogOpen, setDialogOpen] = useState(false)
 
   const {
@@ -46,7 +51,7 @@ export function EditLevelDialog({ levelId }: any) {
         setDialogOpen(false)
       }
 
-      await api.put(`/niveis/${levelId}`, {
+      await api.put(`/niveis/${id}`, {
         level,
       })
 
@@ -76,8 +81,8 @@ export function EditLevelDialog({ levelId }: any) {
               <Label htmlFor="level">Nível</Label>
               <Input
                 id="level"
-                defaultValue="Nível Exemplo"
                 className="col-span-3"
+                placeholder="Nível Exemplo"
                 required
                 {...register('level')}
               />

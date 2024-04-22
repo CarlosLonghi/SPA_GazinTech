@@ -80,7 +80,7 @@ export function CreateDeveloperDialog() {
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
-          Novo Nível
+          Adicionar Desenvolvedor
           <Plus strokeWidth={3} className="ml-2 h-3 w-3" />
         </Button>
       </DialogTrigger>

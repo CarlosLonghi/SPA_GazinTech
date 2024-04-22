@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 
-import { LevelsProvider } from '../../contexts/LevelContext'
+import { LevelsProvider } from '../../contexts/level-context'
 import { ListLevels } from './list-levels'
 
 export function Levels() {

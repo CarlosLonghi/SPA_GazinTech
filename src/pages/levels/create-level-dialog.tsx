@@ -1,4 +1,3 @@
-import { useContextSelector } from '@fluentui/react-context-selector'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
@@ -19,8 +18,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-
-import { LevelsContext } from '../../contexts/LevelContext'
+import { api } from '@/libs/axios'
 
 const createLevelFormSchema = z.object({
   level: z.string(),
@@ -30,10 +28,6 @@ type CreateLevelFormInputs = z.infer<typeof createLevelFormSchema>
 
 export function CreateLevelDialog() {
   const [dialogOpen, setDialogOpen] = useState(false)
-
-  const createLevel = useContextSelector(LevelsContext, (context) => {
-    return context.createLevel
-  })
 
   const {
     register,
@@ -51,7 +45,7 @@ export function CreateLevelDialog() {
         setDialogOpen(false)
       }
 
-      await createLevel({
+      await api.post('/niveis/', {
         level,
       })
 

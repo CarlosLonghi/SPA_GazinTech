@@ -1,0 +1,88 @@
+import { createContext } from '@fluentui/react-context-selector'
+import { ReactNode, useCallback, useEffect, useState } from 'react'
+
+import { api } from '../libs/axios'
+
+interface Developer {
+  id: string
+  name: string
+  level_id: string
+  sex: string
+  hobby: string
+  birth_date: string
+  age: number
+}
+
+interface Level {
+  id: string
+  level: string
+}
+
+interface DeleteDeveloperId {
+  id: string
+}
+
+interface DevelopersContextType {
+  developers: Developer[]
+  levels: Level[]
+  fetchDevelopers: (query?: string) => Promise<void>
+  fetchLevels: (query?: string) => Promise<void>
+  deleteDeveloper: (data: DeleteDeveloperId) => Promise<void>
+}
+
+interface DevelopersProviderProps {
+  children: ReactNode
+}
+
+export const DevelopersContext = createContext({} as DevelopersContextType)
+
+export function DevelopersProvider({ children }: DevelopersProviderProps) {
+  const [developers, setDevelopers] = useState<Developer[]>([])
+  const [levels, setLevels] = useState<Level[]>([])
+
+  const fetchDevelopers = useCallback(async (query?: string) => {
+    const response = await api.get('desenvolvedores', {
+      params: {
+        q: query,
+      },
+    })
+
+    setDevelopers(response.data.developers)
+  }, [])
+
+  const fetchLevels = useCallback(async (query?: string) => {
+    const response = await api.get('niveis', {
+      params: {
+        q: query,
+      },
+    })
+
+    setLevels(response.data.levels)
+  }, [])
+
+  const deleteDeveloper = useCallback(async (data: DeleteDeveloperId) => {
+    const { id } = data
+    await api.delete(`desenvolvedores/${id}`).then(function () {
+      setDevelopers((state) => [...state])
+    })
+  }, [])
+
+  useEffect(() => {
+    fetchDevelopers()
+    fetchLevels()
+  }, [developers, fetchDevelopers, fetchLevels])
+
+  return (
+    <DevelopersContext.Provider
+      value={{
+        developers,
+        levels,
+        fetchDevelopers,
+        fetchLevels,
+        deleteDeveloper,
+      }}
+    >
+      {children}
+    </DevelopersContext.Provider>
+  )
+}

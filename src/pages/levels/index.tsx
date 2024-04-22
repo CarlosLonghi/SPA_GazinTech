@@ -7,6 +7,7 @@ export function Levels() {
   return (
     <>
       <Helmet title="Níveis" />
+      <h1 className="text-2xl font-bold tracking-tight">Lista de Níveis</h1>
       <LevelsProvider>
         <ListLevels />
       </LevelsProvider>

@@ -50,8 +50,6 @@ export function ListLevels() {
 
   return (
     <>
-      <h1 className="text-2xl font-bold tracking-tight">Lista de Níveis</h1>
-
       <div className="flex justify-end">
         <CreateLevelDialog />
       </div>

@@ -7,7 +7,7 @@ interface Developer {
   id: string
   name: string
   level_id: string
-  level_name?: string
+  level_name: string
   sex: string
   hobby: string
   birth_date: string
@@ -45,30 +45,32 @@ export function DevelopersProvider({ children }: DevelopersProviderProps) {
   const [developers, setDevelopers] = useState<Developer[]>([])
   const [levels, setLevels] = useState<Level[]>([])
 
-  const fetchDevelopers = useCallback(async (query?: string) => {
-    const response = await api.get('desenvolvedores', {
-      params: {
-        q: query,
-      },
-    })
+  const fetchDevelopers = useCallback(
+    async (query?: string) => {
+      const response = await api.get('desenvolvedores', {
+        params: {
+          q: query,
+        },
+      })
 
-    const developersData = response.data.developers
+      const developersData = response.data.developers
+      const levelsMap = levels.reduce((acc: LevelsMap, level: Level) => {
+        acc[level.id] = level
+        return acc
+      }, {})
 
-    const levelsResponse = await api.get('niveis')
-    const levelsData = levelsResponse.data.levels
+      const developersWithLevels = developersData.map(
+        (developer: Developer) => ({
+          ...developer,
+          level_name:
+            levelsMap[developer.level_id]?.level || 'Nível desconhecido',
+        }),
+      )
 
-    const levelsMap = levelsData.reduce((acc: LevelsMap, level: Level) => {
-      acc[level.id] = level
-      return acc
-    }, {})
-
-    const developersWithLevels = developersData.map((developer: Developer) => ({
-      ...developer,
-      level_name: levelsMap[developer.level_id]?.level || 'Nível desconhecido',
-    }))
-
-    setDevelopers(developersWithLevels)
-  }, [])
+      setDevelopers(developersWithLevels)
+    },
+    [levels],
+  )
 
   const fetchLevels = useCallback(async (query?: string) => {
     const response = await api.get('niveis', {
@@ -90,9 +92,7 @@ export function DevelopersProvider({ children }: DevelopersProviderProps) {
   )
 
   useEffect(() => {
-    fetchDevelopers(`SELECT developers.name, developers.sex, developers.hobby, developers.birth_date,  developers.age, levels.level
-    FROM developers
-    INNER JOIN levels ON developers.level_id = levels.id`)
+    fetchDevelopers()
     fetchLevels()
   }, [developers, fetchDevelopers, fetchLevels])
 

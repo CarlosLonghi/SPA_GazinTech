@@ -74,72 +74,57 @@ export function ListDevelopers() {
         </div>
       )}
 
-      {developers.length > 0 ? (
-        <div className="flex-1 rounded-md bg-secondary">
-          <Table>
-            <TableCaption>Desenvolvedores</TableCaption>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nome</TableHead>
-                <TableHead className="w-24">Nível Id</TableHead>
-                <TableHead className="w-24">Sexo</TableHead>
-                <TableHead className="w-24">Data Nascimento</TableHead>
-                <TableHead className="w-24">Idade</TableHead>
-                <TableHead className="w-24">Hobby</TableHead>
-                <TableHead className="w-28">Ações</TableHead>
+      <div className="flex-1 rounded-md bg-secondary">
+        <Table>
+          <TableCaption>Desenvolvedores</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nome</TableHead>
+              <TableHead className="w-24">Nível Id</TableHead>
+              <TableHead className="w-24">Sexo</TableHead>
+              <TableHead className="w-24">Data Nascimento</TableHead>
+              <TableHead className="w-24">Idade</TableHead>
+              <TableHead className="w-24">Hobby</TableHead>
+              <TableHead className="w-28">Ações</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {developers.map((developerData) => (
+              <TableRow key={String(developerData.id)}>
+                <TableCell className="font-mono text-xs font-medium">
+                  {developerData.name}
+                </TableCell>
+                <TableCell className="font-mono text-xs">
+                  {developerData.level_id}
+                </TableCell>
+                <TableCell className="font-mono  text-xs">
+                  {developerData.sex}
+                </TableCell>
+                <TableCell className="font-mono text-xs">
+                  {format(parseISO(developerData.birth_date), 'dd/MM/yyyy')}
+                </TableCell>
+                <TableCell className="font-mono text-xs">
+                  {developerData.age} anos
+                </TableCell>
+                <TableCell className="font-mono text-xs">
+                  {developerData.hobby}
+                </TableCell>
+                <TableCell className="flex items-center gap-2">
+                  <EditDeveloperDialog id={developerData.id} />
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => handleDeleteDeveloper(developerData)}
+                  >
+                    Excluir
+                    <Trash strokeWidth={3} className="ml-2 h-3 w-3" />
+                  </Button>
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {developers.map((developerData) => (
-                <TableRow key={String(developerData.id)}>
-                  <TableCell className="font-mono text-xs font-medium">
-                    {developerData.name}
-                  </TableCell>
-                  <TableCell className="font-mono text-xs">
-                    {developerData.level_id}
-                  </TableCell>
-                  <TableCell className="font-mono  text-xs">
-                    {developerData.sex}
-                  </TableCell>
-                  <TableCell className="font-mono text-xs">
-                    {format(parseISO(developerData.birth_date), 'dd/MM/yyyy')}
-                  </TableCell>
-                  <TableCell className="font-mono text-xs">
-                    {developerData.age} anos
-                  </TableCell>
-                  <TableCell className="font-mono text-xs">
-                    {developerData.hobby}
-                  </TableCell>
-                  <TableCell className="flex items-center gap-2">
-                    <EditDeveloperDialog id={developerData.id} />
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleDeleteDeveloper(developerData)}
-                    >
-                      Excluir
-                      <Trash strokeWidth={3} className="ml-2 h-3 w-3" />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      ) : (
-        <div className="flex flex-1 items-center justify-center rounded-md bg-secondary">
-          <div className="flex flex-col items-center justify-center gap-5">
-            <h3 className="w-10/12 text-center text-xl font-medium tracking-tight">
-              Nenhum Desenvolvedor Cadastrado.
-            </h3>
-
-            <h4 className="w-10/12 text-center">
-              Se já possui níveis cadastrados comece adicionando um
-              Desenvolvedor
-            </h4>
-          </div>
-        </div>
-      )}
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </>
   )
 }

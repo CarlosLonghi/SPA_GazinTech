@@ -53,55 +53,42 @@ export function ListLevels() {
       <div className="flex justify-end">
         <CreateLevelDialog />
       </div>
-      {levels.length > 0 ? (
-        <div className="flex-1 rounded-md bg-secondary">
-          <Table>
-            <TableCaption>Níveis</TableCaption>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-56 text-foreground">Nível</TableHead>
-                <TableHead className="text-foreground">Código</TableHead>
-                <TableHead className="w-28">Ações</TableHead>
+
+      <div className="flex-1 rounded-md bg-secondary">
+        <Table>
+          <TableCaption>Níveis</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-56 text-foreground">Nível</TableHead>
+              <TableHead className="text-foreground">Código</TableHead>
+              <TableHead className="w-28">Ações</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {levels.map((levelData) => (
+              <TableRow key={String(levelData.level)}>
+                <TableCell>{levelData.level}</TableCell>
+                <TableCell className="font-mono text-xs font-medium">
+                  {levelData.id}
+                </TableCell>
+
+                <TableCell className="flex items-center gap-2">
+                  <EditLevelDialog id={levelData.id} />
+
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => handleDeleteLevel(levelData)}
+                  >
+                    Excluir
+                    <Trash strokeWidth={3} className="ml-2 h-3 w-3" />
+                  </Button>
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {levels.map((levelData) => (
-                <TableRow key={String(levelData.level)}>
-                  <TableCell>{levelData.level}</TableCell>
-                  <TableCell className="font-mono text-xs font-medium">
-                    {levelData.id}
-                  </TableCell>
-
-                  <TableCell className="flex items-center gap-2">
-                    <EditLevelDialog id={levelData.id} />
-
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleDeleteLevel(levelData)}
-                    >
-                      Excluir
-                      <Trash strokeWidth={3} className="ml-2 h-3 w-3" />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      ) : (
-        <div className="flex flex-1 items-center justify-center rounded-md bg-secondary">
-          <div className="flex flex-col items-center justify-center gap-5">
-            <h3 className="w-10/12 text-center text-xl font-medium tracking-tight">
-              Nenhum Nível Cadastrado.
-            </h3>
-
-            <h4 className="w-10/12 text-center">
-              Cadastre níveis para vinculá-los aos Desenvolvedores
-            </h4>
-          </div>
-        </div>
-      )}
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </>
   )
 }

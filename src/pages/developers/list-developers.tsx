@@ -80,7 +80,7 @@ export function ListDevelopers() {
           <TableHeader>
             <TableRow>
               <TableHead>Nome</TableHead>
-              <TableHead className="w-24">Nível Id</TableHead>
+              <TableHead className="w-24">Nível</TableHead>
               <TableHead className="w-24">Sexo</TableHead>
               <TableHead className="w-24">Data Nascimento</TableHead>
               <TableHead className="w-24">Idade</TableHead>

@@ -15,3 +15,7 @@
 ```bash
     npm run dev
 ```
+
+#### Erros a serem corrigidos:
+
+- Ao criar o primeiro nível ou lista, é preciso atualizar a página para que aparecam na tabela.

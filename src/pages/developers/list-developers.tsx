@@ -47,7 +47,7 @@ export function ListDevelopers() {
       const errorMessage = errorResponse.message
 
       if (errorMessage === 'Request failed with status code 400') {
-        return toast.error('Nível Vinculado há um desenvolvedor!')
+        return toast.error('Nível Vinculado a um desenvolvedor!')
       }
       toast.error('Erro ao deletar o nível.')
     }
@@ -95,7 +95,7 @@ export function ListDevelopers() {
                   {developerData.name}
                 </TableCell>
                 <TableCell className="font-mono text-xs">
-                  {developerData.level_id}
+                  {developerData.level_name}
                 </TableCell>
                 <TableCell className="font-mono  text-xs">
                   {developerData.sex}

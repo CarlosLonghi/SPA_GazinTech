@@ -7,6 +7,7 @@ interface Developer {
   id: string
   name: string
   level_id: string
+  level_name?: string
   sex: string
   hobby: string
   birth_date: string
@@ -34,6 +35,10 @@ interface DevelopersProviderProps {
   children: ReactNode
 }
 
+interface LevelsMap {
+  [key: string]: Level
+}
+
 export const DevelopersContext = createContext({} as DevelopersContextType)
 
 export function DevelopersProvider({ children }: DevelopersProviderProps) {
@@ -47,7 +52,22 @@ export function DevelopersProvider({ children }: DevelopersProviderProps) {
       },
     })
 
-    setDevelopers(response.data.developers)
+    const developersData = response.data.developers
+
+    const levelsResponse = await api.get('niveis')
+    const levelsData = levelsResponse.data.levels
+
+    const levelsMap = levelsData.reduce((acc: LevelsMap, level: Level) => {
+      acc[level.id] = level
+      return acc
+    }, {})
+
+    const developersWithLevels = developersData.map((developer: Developer) => ({
+      ...developer,
+      level_name: levelsMap[developer.level_id]?.level || 'Nível desconhecido',
+    }))
+
+    setDevelopers(developersWithLevels)
   }, [])
 
   const fetchLevels = useCallback(async (query?: string) => {
@@ -70,7 +90,9 @@ export function DevelopersProvider({ children }: DevelopersProviderProps) {
   )
 
   useEffect(() => {
-    fetchDevelopers()
+    fetchDevelopers(`SELECT developers.name, developers.sex, developers.hobby, developers.birth_date,  developers.age, levels.level
+    FROM developers
+    INNER JOIN levels ON developers.level_id = levels.id`)
     fetchLevels()
   }, [developers, fetchDevelopers, fetchLevels])
 

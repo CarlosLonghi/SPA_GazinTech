@@ -60,12 +60,14 @@ export function DevelopersProvider({ children }: DevelopersProviderProps) {
     setLevels(response.data.levels)
   }, [])
 
-  const deleteDeveloper = useCallback(async (data: DeleteDeveloperId) => {
-    const { id } = data
-    await api.delete(`desenvolvedores/${id}`).then(function () {
-      setDevelopers((state) => [...state])
-    })
-  }, [])
+  const deleteDeveloper = useCallback(
+    async (data: DeleteDeveloperId) => {
+      const { id } = data
+      await api.delete(`desenvolvedores/${id}`)
+      fetchDevelopers()
+    },
+    [fetchDevelopers],
+  )
 
   useEffect(() => {
     fetchDevelopers()

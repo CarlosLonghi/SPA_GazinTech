@@ -1,5 +1,7 @@
 import { useContextSelector } from '@fluentui/react-context-selector'
-import { Trash } from 'lucide-react'
+import { format, parseISO } from 'date-fns'
+import { Plus, Trash } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import * as z from 'zod'
 
@@ -17,7 +19,6 @@ import { DevelopersContext } from '@/contexts/developer-context'
 
 import { CreateDeveloperDialog } from './create-developer-dialog'
 import { EditDeveloperDialog } from './edit-developer-dialog'
-
 const deleteDeveloperId = z.object({
   id: z.string(),
 })
@@ -29,9 +30,9 @@ export function ListDevelopers() {
     return context.developers
   })
 
-  //   const levels = useContextSelector(DevelopersContext, (context) => {
-  //     return context.levels
-  //   })
+  const levels = useContextSelector(DevelopersContext, (context) => {
+    return context.levels
+  })
 
   const deleteLevel = useContextSelector(DevelopersContext, (context) => {
     return context.deleteDeveloper
@@ -54,17 +55,33 @@ export function ListDevelopers() {
 
   return (
     <>
-      <div className="flex justify-end">
-        <CreateDeveloperDialog />
-      </div>
-      <div className="flex-1 rounded-md border border-secondary-foreground bg-secondary">
-        {developers ? (
+      {levels.length > 0 ? (
+        <div className="flex justify-end">
+          <CreateDeveloperDialog />
+        </div>
+      ) : (
+        <div className="flex items-center justify-end gap-4">
+          <span className="text-base">
+            Primeiramente <strong>cadastre níveis</strong> para adicioná-los aos
+            desenvolvedores
+          </span>
+          <Button variant="outline" size="default" asChild>
+            <Link to="/niveis">
+              Criar Nível
+              <Plus strokeWidth={3} className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+      )}
+
+      {developers.length > 0 ? (
+        <div className="flex-1 rounded-md bg-secondary">
           <Table>
             <TableCaption>Desenvolvedores</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead>Nome</TableHead>
-                <TableHead className="w-24">Nível</TableHead>
+                <TableHead className="w-24">Nível Id</TableHead>
                 <TableHead className="w-24">Sexo</TableHead>
                 <TableHead className="w-24">Data Nascimento</TableHead>
                 <TableHead className="w-24">Idade</TableHead>
@@ -85,7 +102,7 @@ export function ListDevelopers() {
                     {developerData.sex}
                   </TableCell>
                   <TableCell className="font-mono text-xs">
-                    {developerData.birth_date}
+                    {format(parseISO(developerData.birth_date), 'dd/MM/yyyy')}
                   </TableCell>
                   <TableCell className="font-mono text-xs">
                     {developerData.age} anos
@@ -94,7 +111,7 @@ export function ListDevelopers() {
                     {developerData.hobby}
                   </TableCell>
                   <TableCell className="flex items-center gap-2">
-                    <EditDeveloperDialog />
+                    <EditDeveloperDialog id={developerData.id} />
                     <Button
                       variant="destructive"
                       size="sm"
@@ -108,12 +125,21 @@ export function ListDevelopers() {
               ))}
             </TableBody>
           </Table>
-        ) : (
-          <h4 className="text-1xl font-medium tracking-tight">
-            Nenhum Desenvolvedor Cadastrado.
-          </h4>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="flex flex-1 items-center justify-center rounded-md bg-secondary">
+          <div className="flex flex-col items-center justify-center gap-5">
+            <h3 className="w-10/12 text-center text-xl font-medium tracking-tight">
+              Nenhum Desenvolvedor Cadastrado.
+            </h3>
+
+            <h4 className="w-10/12 text-center">
+              Se já possui níveis cadastrados comece adicionando um
+              Desenvolvedor
+            </h4>
+          </div>
+        </div>
+      )}
     </>
   )
 }

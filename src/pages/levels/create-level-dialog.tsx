@@ -59,9 +59,9 @@ export function CreateLevelDialog() {
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="default">
           Novo Nível
-          <Plus strokeWidth={3} className="ml-2 h-3 w-3" />
+          <Plus strokeWidth={3} className="ml-2 h-4 w-4" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

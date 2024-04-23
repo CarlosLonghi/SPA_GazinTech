@@ -5,7 +5,7 @@ import { NavLink } from './nav-link'
 
 export function Header() {
   return (
-    <div className="border-b">
+    <div className="border-b border-secondary">
       <div className="m-auto flex max-w-[64rem] items-center justify-start gap-16 px-4 py-6 lg:px-8">
         <a
           href="https://gazintech.com.br/"

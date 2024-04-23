@@ -1,3 +1,4 @@
+import { useContextSelector } from '@fluentui/react-context-selector'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Pen } from 'lucide-react'
 import { useState } from 'react'
@@ -18,7 +19,6 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import {
   Select,
   SelectContent,
@@ -26,17 +26,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { DevelopersContext } from '@/contexts/developer-context'
+import { api } from '@/libs/axios'
 
 const editDeveloperFormSchema = z.object({
   name: z.string(),
-  level: z.string(),
+  levelId: z.string(),
   sex: z.string().length(1),
   hobby: z.string(),
 })
 
-type EditDeveloperFormInputs = z.infer<typeof editDeveloperFormSchema>
+const editDeveloperId = z.object({
+  id: z.string(),
+})
 
-export function EditDeveloperDialog() {
+type EditDeveloperFormInputs = z.infer<typeof editDeveloperFormSchema>
+type EditDeveloperId = z.infer<typeof editDeveloperId>
+
+export function EditDeveloperDialog({ id }: EditDeveloperId) {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [dateTimeValue, setDateTimeValue] = useState('')
 
@@ -50,20 +57,28 @@ export function EditDeveloperDialog() {
     resolver: zodResolver(editDeveloperFormSchema),
   })
 
+  const levels = useContextSelector(DevelopersContext, (context) => {
+    return context.levels
+  })
+
   async function handleEditDeveloper(data: EditDeveloperFormInputs) {
     try {
-      const { name, level, sex, hobby } = data
+      const { name, levelId, sex, hobby } = data
 
       const birthDate = dateTimeValue
       if (!isSubmitting) {
         setDialogOpen(false)
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 800))
+      await api.put(`/desenvolvedores/${id}`, {
+        name,
+        levelId,
+        sex,
+        hobby,
+        birthDate,
+      })
 
       toast.success('Desenvolvedor atualizado com sucesso!')
-      console.log({ name, level, sex, birthDate, hobby })
-
       reset()
       setDateTimeValue('')
     } catch (error) {
@@ -111,16 +126,20 @@ export function EditDeveloperDialog() {
             <div className="flex items-center gap-4">
               <Label htmlFor="sex">Sexo</Label>
 
-              <RadioGroup id="sex" className="flex gap-4">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="M" id="M" {...register('sex')} />
-                  <Label htmlFor="M">Masculino</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="F" id="F" {...register('sex')} />
-                  <Label htmlFor="F">Feminino</Label>
-                </div>
-              </RadioGroup>
+              <Label
+                className="flex cursor-pointer items-center gap-1"
+                htmlFor="men"
+              >
+                <input {...register('sex')} type="radio" value="M" id="men" />
+                <span>Masculino</span>
+              </Label>
+              <Label
+                className="flex cursor-pointer items-center gap-1"
+                htmlFor="woman"
+              >
+                <input {...register('sex')} type="radio" value="F" id="woman" />
+                Feminino
+              </Label>
             </div>
 
             <div className="flex items-center gap-4">
@@ -128,7 +147,7 @@ export function EditDeveloperDialog() {
 
               <Controller
                 control={control}
-                name="level"
+                name="levelId"
                 render={({ field }) => {
                   return (
                     <Select onValueChange={field.onChange} {...field} required>
@@ -136,9 +155,11 @@ export function EditDeveloperDialog() {
                         <SelectValue placeholder="Selecione..." />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="nivel 1">Nível 1</SelectItem>
-                        <SelectItem value="nivel 2">Nível 2</SelectItem>
-                        <SelectItem value="nivel 3">Nível 3</SelectItem>
+                        {levels.map((levelData) => (
+                          <SelectItem key={levelData.id} value={levelData.id}>
+                            {levelData.level}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   )
@@ -147,12 +168,13 @@ export function EditDeveloperDialog() {
             </div>
 
             <div className="flex items-center gap-4">
-              <Label htmlFor="birthDate">Aniversário</Label>
+              <Label htmlFor="birthDate">Data de Nascimento</Label>
 
               <input
                 id="birthDate"
                 type="date"
-                value={dateTimeValue.substring(0, 10)}
+                min="1900-01-01"
+                max="2100-12-31"
                 onChange={(e) => concatenateDateTime(e.target.value)}
                 required
               />

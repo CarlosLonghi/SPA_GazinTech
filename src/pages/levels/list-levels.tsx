@@ -40,11 +40,11 @@ export function ListLevels() {
     } catch (error) {
       const errorResponse = error as Error
       const errorMessage = errorResponse.message
-
       if (errorMessage === 'Request failed with status code 400') {
         return toast.error('Nível Vinculado há um desenvolvedor!')
+      } else {
+        toast.error('Erro ao deletar o nível.')
       }
-      toast.error('Erro ao deletar o nível.')
     }
   }
 

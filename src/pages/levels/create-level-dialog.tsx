@@ -1,3 +1,4 @@
+import { useContextSelector } from '@fluentui/react-context-selector'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
@@ -18,6 +19,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { LevelsContext } from '@/contexts/level-context'
 import { api } from '@/libs/axios'
 
 const createLevelFormSchema = z.object({
@@ -38,6 +40,10 @@ export function CreateLevelDialog() {
     resolver: zodResolver(createLevelFormSchema),
   })
 
+  const fetchLevels = useContextSelector(LevelsContext, (context) => {
+    return context.fetchLevels
+  })
+
   async function handleCreateLevel(data: CreateLevelFormInputs) {
     try {
       const { level } = data
@@ -51,6 +57,7 @@ export function CreateLevelDialog() {
 
       toast.success('Nível criado com sucesso!')
       reset()
+      fetchLevels()
     } catch (error) {
       toast.error('Erro ao criar um novo Nível!')
     }

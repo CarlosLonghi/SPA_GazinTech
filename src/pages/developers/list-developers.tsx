@@ -41,15 +41,9 @@ export function ListDevelopers() {
   async function handleDeleteDeveloper({ id }: DeleteDeveloperlId) {
     try {
       await deleteLevel({ id })
-      toast.success('Nível deletado com sucesso!')
+      toast.success('Desenvolvedor deletado com sucesso!')
     } catch (error) {
-      const errorResponse = error as Error
-      const errorMessage = errorResponse.message
-
-      if (errorMessage === 'Request failed with status code 400') {
-        return toast.error('Nível Vinculado a um desenvolvedor!')
-      }
-      toast.error('Erro ao deletar o nível.')
+      toast.error('Erro ao deletar o desenvolvedor.')
     }
   }
 

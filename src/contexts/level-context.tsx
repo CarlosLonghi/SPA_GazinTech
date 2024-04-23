@@ -39,9 +39,8 @@ export function LevelsProvider({ children }: LevelsProviderProps) {
 
   const deleteLevel = useCallback(async (data: DeleteLevelId) => {
     const { id } = data
-    await api.delete(`niveis/${id}`).then(function () {
-      setLevels((state) => [...state])
-    })
+    await api.delete(`niveis/${id}`)
+    setLevels([])
   }, [])
 
   useEffect(() => {
